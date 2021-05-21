@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -28,12 +29,13 @@ class MainActivityViewModel: ViewModel() {
     private var weatherAdapter = WeatherAdapter(this)
     @SuppressLint("StaticFieldLeak")
     private lateinit var loadingPanel: View
+    @SuppressLint("StaticFieldLeak")
     private lateinit var swipePanel: SwipeRefreshLayout
 
     @SuppressLint("CheckResult")
     fun getCities(query: String, context: Context) {
         loadingPanel = (context as MainActivity).findViewById(R.id.loadingPanel)
-        swipePanel = (context as MainActivity).findViewById(R.id.swipe_recycler_view)
+        swipePanel = context.findViewById(R.id.swipe_recycler_view)
         swipePanel.isRefreshing = true
 
         cities.clear()
@@ -41,7 +43,7 @@ class MainActivityViewModel: ViewModel() {
         MainActivityRepository.getCitiesApiCall(query)
             .flatMap { cities -> Observable.fromIterable(cities) }
             .flatMap { city -> MainActivityRepository.getCityWeatherApiCall(city.woeid) }
-            .subscribe {
+            .subscribe ({
                 val c = City(it.title)
                 c.weathers = it.consolidatedWeather
                 cities.add(c)
@@ -50,7 +52,10 @@ class MainActivityViewModel: ViewModel() {
                     loadingPanel.visibility = View.GONE
                     swipePanel.isRefreshing = false
                 }
-            }
+            },
+                {
+                    Log.d((context as MainActivity).javaClass.simpleName, context.getString(R.string.error_msg))
+                })
     }
 
     fun getWeatherState(pos: Int, date: Int): String {
@@ -87,7 +92,7 @@ class MainActivityViewModel: ViewModel() {
         @BindingAdapter("imageUrl")
         fun loadImage(view: ImageView, url: String?) {
             if(!url.isNullOrBlank()){
-                Glide.with(view.context).load("https://www.metaweather.com/static/img/weather/png/64/"+url+".png").into(view)
+                Glide.with(view.context).load("https://www.metaweather.com/static/img/weather/png/64/$url.png").into(view)
             }
         }
     }

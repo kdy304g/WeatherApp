@@ -5,4 +5,5 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="local_weather">Local Weather</string>
     <string name="query_string">se</string>
+    <string name="error_msg">error getting weather info</string>
 </resources>
