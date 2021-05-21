@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Idus Assignment</string>
+    <string name="local">Local</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="local_weather">Local Weather</string>
+    <string name="query_string">se</string>
+</resources>
