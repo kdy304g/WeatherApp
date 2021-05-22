@@ -54,7 +54,7 @@ class MainActivityViewModel: ViewModel() {
                 }
             },
                 {
-                    Log.d((context as MainActivity).javaClass.simpleName, context.getString(R.string.error_msg))
+                    Log.d(context.javaClass.simpleName, it.message + context.getString(R.string.error_msg))
                 })
     }
 
